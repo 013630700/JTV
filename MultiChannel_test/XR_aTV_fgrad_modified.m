@@ -16,6 +16,5 @@
 
 function grad = XR_aTV_fgrad_modified(x,m,ang,corxn,alpha,beta,c11,c12,c21,c22,N)
 
-grad = XR_misfit_grad_modified(x,m,ang,corxn,c11,c12,c21,c22,N) + alpha*XR_aTV_grad_mc(x,beta,N);
-
+grad = XR_misfit_grad_modified(x,m,ang,corxn,c11,c12,c21,c22,N)+ alpha*XR_aTV_grad_mc(x,beta,N);
 

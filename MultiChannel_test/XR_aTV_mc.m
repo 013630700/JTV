@@ -14,8 +14,8 @@
 function pr = XR_aTV_mc(x,beta,N)
 
 % Erotellaan vektorista x kaksi osaa: g1 ja g2.
-g1=reshape(x(1:(end/2)),N,N);
-g2=reshape(x((end/2+1):end),N,N);
+g1=reshape(x(1:(end/2),:),N,N);
+g2=reshape(x((end/2+1):end,:),N,N);
 
 % Lasketaan TV kuvalle g1 kutsumalla alkuperäistä funktioita XR_aTV:
 g1_TV = XR_aTV(g1,beta);

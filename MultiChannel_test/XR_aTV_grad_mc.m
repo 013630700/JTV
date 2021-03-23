@@ -14,9 +14,10 @@
 % Samuli Siltanen February 2011
 
 function grad = XR_aTV_grad_mc(x,beta,N)
+
 % Erotellaan vektorista x kaksi osaa: g1 ja g2.
-g1=reshape(x(1:(end/2)),N,N);
-g2=reshape(x((end/2+1):end),N,N);
+g1=reshape(x(1:(end/2),:),N,N);
+g2=reshape(x((end/2+1):end,:),N,N);
 
 % Lasketaan gradientti g1:lle kutsumalla funktioita XR_aTV_grad:
 grad_g1 = XR_aTV_grad(g1,beta);
@@ -56,4 +57,4 @@ grad = [grad_g1;grad_g2];
 %    end
 % end
 
-grad = grad(:);%reshape(grad,N,M);
+grad = grad;%reshape(grad,N,M);
