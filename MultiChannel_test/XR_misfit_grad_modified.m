@@ -68,10 +68,10 @@ am2 = am2(2:end-1,2:end-1);
 am2 = corxn*am2;
 
 % Compute the parts of the result individually
-res1 = c11*am1;
-res2 = c21*am2;
-res3 = c12*am1;
-res4 = c22*am2;
+res1 = c11*am1(:);
+res2 = c21*am2(:);
+res3 = c12*am1(:);
+res4 = c22*am2(:);
 
 % Collect the results together
 ATAx = [res1 + res2; res3 + res4];
@@ -83,10 +83,10 @@ ATAx = [res1 + res2; res3 + res4];
 % ATm = ATm(2:end-1,2:end-1);
 % ATm = corxn*ATm;
 
-% m1 = m(1:(end/2));
-% m1 = reshape(m1, [length(m)/(2*length(ang)) length(ang)]);
-% m2 = m((end/2+1):end);
-% m2 = reshape(m2, [length(m)/(2*length(ang)) length(ang)]);
+m1 = m(1:(end/2));
+m1 = reshape(m1, [length(m)/(2*length(ang)) length(ang)]);
+m2 = m((end/2+1):end);
+m2 = reshape(m2, [length(m)/(2*length(ang)) length(ang)]);
 
 corxn = 7.65; % Incomprehensible correction factor
 
@@ -101,10 +101,10 @@ am2 = am2(2:end-1,2:end-1);
 am2 = corxn*am2;
 
 % Compute the parts of the result individually
-res1 = c11*am1;
-res2 = c21*am2;
-res3 = c12*am1;
-res4 = c22*am2;
+res1 = c11*am1(:);
+res2 = c21*am2(:);
+res3 = c12*am1(:);
+res4 = c22*am2(:);
 
 % Collect the results together
 ATm = [res1 + res2; res3 + res4];

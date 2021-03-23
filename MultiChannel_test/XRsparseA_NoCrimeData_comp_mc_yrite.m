@@ -18,11 +18,11 @@
 %Modified by Salla 2.7.2020
 clear all;
 % Regularization parameter
-alpha = 6000;
+alpha = 100;
 
 % Maximum number of iterations. You can modify this value and observe the
 % effects on the reconstruction.
-MAXITER = 200;               
+MAXITER = 5000;               
 % Choose the angles for tomographic projections
 Nang       = 65; % odd number is preferred
 ang        = [0:(Nang-1)]*360/Nang;
@@ -64,7 +64,7 @@ target2=double(target2(:,:,1));
 % g2 = target2(:);
 
 % Combine
-x  =[target1;target2];
+x  =[target1(:);target2(:)];
 
 %% Start reconstruction
 % % Simulate measurements SINOGRAM
@@ -131,7 +131,7 @@ obj(its+1) = OFf;
 % end
 
 % Barzilai and Borwein iterative minimization routine 
-figure(33)
+%figure(33)
 while (its  < MAXITER) 
     its = its + 1;   
     
@@ -155,11 +155,11 @@ while (its  < MAXITER)
     fold = fnew;
     gold = gnew;
     fnew = max(fnew - steplen*gnew,0);
-    gnew = XR_aTV_fgrad_modified(fnew,mncn,ang,corxn,alpha,beta,c11,c12,c21,c22,N);
+    gnew = XR_aTV_fgrad_modified(fnew,mncn,ang,corxn,alpha,beta,c11,c12,c21,c22,N);    
     OFf  = XR_aTV_feval_modified(fnew,mncn,ang,alpha,beta,N,c11,c12,c21,c22); 
     obj(its+1) = OFf;
     format short e
-    imshow(fnew,[])
+    %imshow(fnew,[])
     % Monitor the run
     %disp(['Iteration ', num2str(its,'%4d'),', objective function value ',num2str(obj(its),'%.3e')])
 end   % Iteration while-loop

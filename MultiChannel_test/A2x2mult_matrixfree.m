@@ -4,7 +4,7 @@ function [ res ] = A2x2mult_matrixfree( c11,c12,c21,c22, x,ang,N )
 % multiplication A*g for system with two images and two materials.
 %
 % Version 1.0, September 20, 2019
-% (c) Salla Latva-Äijö and Samuli Siltanen 
+% (c) Salla Latva-ï¿½ijï¿½ and Samuli Siltanen 
 %
 % Routine for the two-energies and two materials scheme related to S Siltanen's 
 % method for solution of the conjugate gradient Tikhonov algorithm.
@@ -21,7 +21,7 @@ function [ res ] = A2x2mult_matrixfree( c11,c12,c21,c22, x,ang,N )
 % Returns
 % res       sinograms of g, as images one after another (size x*40) 
 %
-% Last revision Salla Latva-Äijö Sep 2019
+% Last revision Salla Latva-ï¿½ijï¿½ Sep 2019
 
 % This function calculates multiplication A*g for system with two images
 % and two materials, without constructing the matrix A.
@@ -37,10 +37,10 @@ ag1 = radon(g1,ang);
 ag2 = radon(g2,ang);
 
 % Calculate the parts needed for block matrix multiplication
-res1 = c11*ag1;
-res2 = c12*ag2;
-res3 = c21*ag1;
-res4 = c22*ag2;
+res1 = c11*ag1(:);
+res2 = c12*ag2(:);
+res3 = c21*ag1(:);
+res4 = c22*ag2(:);
 
 % Combine results into the result
 res = [res1 + res2; res3 + res4];

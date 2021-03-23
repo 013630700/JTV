@@ -10,9 +10,9 @@
 % beta   	Smoothing parameter for approximate total variation prior
 %
 % Returns:
-% grad      gradient of the deblur objective function
+% grad      gradient of the  objective function
 %
-% Samuli Siltanen February 2011
+% Salla Latva-Äijö and Samuli Siltanen March 2021
 
 function grad = XR_aTV_fgrad_modified(x,m,ang,corxn,alpha,beta,c11,c12,c21,c22,N)
 

@@ -27,11 +27,11 @@ grad_g2 = XR_aTV_grad(g2,beta);
 
 % Muodostetaan g1:n ja g2:n gradienteista koko tuplakuva systeemin
 % gradientti:
-grad = [grad_g1;grad_g2];
+grad = [grad_g1(:);grad_g2(:)];
 
 
-% Jätän tähän vähän tätä funktioita XR_aTV_grad, siltä varalta, ettei
-% funktiokutsu toisen sisällä toimikaan
+% Jï¿½tï¿½n tï¿½hï¿½n vï¿½hï¿½n tï¿½tï¿½ funktioita XR_aTV_grad, siltï¿½ varalta, ettei
+% funktiokutsu toisen sisï¿½llï¿½ toimikaan
 % [N,M] = size(x);
 % grad  = zeros(N*M,1);
 % 
@@ -57,4 +57,4 @@ grad = [grad_g1;grad_g2];
 %    end
 % end
 
-grad = grad;%reshape(grad,N,M);
+%grad = grad;%reshape(grad,N,M);

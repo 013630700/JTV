@@ -29,13 +29,13 @@ ag1 = radon(g1,ang);
 ag2 = radon(g2,ang);
 
 % Calculate the parts needed for block matrix multiplication
-res1 = c11*ag1;
-res2 = c12*ag2;
-res3 = c21*ag1;
-res4 = c22*ag2;
+res1 = c11*ag1(:);
+res2 = c12*ag2(:);
+res3 = c21*ag1(:);
+res4 = c22*ag2(:);
 
 % Combine results into the result
 Ax = [res1 + res2; res3 + res4];
 
-Ax_m =Ax-m;
+Ax_m =Ax-m(:);
 result = Ax_m(:).'*Ax_m(:);

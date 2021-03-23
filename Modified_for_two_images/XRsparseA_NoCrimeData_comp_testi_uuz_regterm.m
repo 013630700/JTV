@@ -18,11 +18,11 @@
 %Modified by Salla 2.7.2020
 clear all;
 % Regularization parameter
-alpha = 30;
+alpha = 500;
 
 % Maximum number of iterations. You can modify this value and observe the
 % effects on the reconstruction.
-MAXITER = 500;               
+MAXITER = 5000;               
 % Choose the angles for tomographic projections
 Nang       = 65; % odd number is preferred
 ang        = [0:(Nang-1)]*360/Nang;
