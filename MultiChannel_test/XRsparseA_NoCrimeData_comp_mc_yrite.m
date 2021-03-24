@@ -18,17 +18,17 @@
 %Modified by Salla 2.7.2020
 clear all;
 % Regularization parameter
-alpha = 200;
+alpha = 1000;
 
 % Maximum number of iterations. You can modify this value and observe the
 % effects on the reconstruction.
-MAXITER = 20000;               
+MAXITER = 10000;               
 % Choose the angles for tomographic projections
 Nang       = 65; % odd number is preferred
 ang        = [0:(Nang-1)]*360/Nang;
 % Smoothing parameter used in the approximate absolute value function
 beta    = .0001; 
-N = 40;
+N = 128;
 target1 = imresize((imread('new_HY_material_one_bmp.bmp')), [N N]);
 target2 = imresize((imread('new_HY_material_two_bmp.bmp')), [N N]);
 
