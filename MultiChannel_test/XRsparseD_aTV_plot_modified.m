@@ -59,7 +59,7 @@ title('Profile of approximate TV reconstruction 2')
 % Plot evolution of oblective function
 figure(5)
 clf
-semilogy(obj,'*-')
+semilogy(obj,'b')
 axis square
 title('Values of objective function during iteration')
 

@@ -18,11 +18,11 @@
 %Modified by Salla 2.7.2020
 clear all;
 % Regularization parameter
-alpha = 100;
+alpha = 200;
 
 % Maximum number of iterations. You can modify this value and observe the
 % effects on the reconstruction.
-MAXITER = 5000;               
+MAXITER = 20000;               
 % Choose the angles for tomographic projections
 Nang       = 65; % odd number is preferred
 ang        = [0:(Nang-1)]*360/Nang;
@@ -161,7 +161,9 @@ while (its  < MAXITER)
     format short e
     %imshow(fnew,[])
     % Monitor the run
-    %disp(['Iteration ', num2str(its,'%4d'),', objective function value ',num2str(obj(its),'%.3e')])
+    if mod(its,100)==0
+        disp(['Iteration ', num2str(its),', objective function value ',num2str(obj(its),'%.8e')])
+    end
 end   % Iteration while-loop
 %%
 recn = fnew;
