@@ -22,13 +22,13 @@ alpha = 1000;
 
 % Maximum number of iterations. You can modify this value and observe the
 % effects on the reconstruction.
-MAXITER = 10000;               
+MAXITER = 20000;               
 % Choose the angles for tomographic projections
 Nang       = 65; % odd number is preferred
 ang        = [0:(Nang-1)]*360/Nang;
 % Smoothing parameter used in the approximate absolute value function
 beta    = .0001; 
-N = 128;
+N = 100;
 target1 = imresize((imread('new_HY_material_one_bmp.bmp')), [N N]);
 target2 = imresize((imread('new_HY_material_two_bmp.bmp')), [N N]);
 
@@ -63,7 +63,8 @@ target2=double(target2(:,:,1));
 % g1 = target1(:);
 % g2 = target2(:);
 
-% Combine
+% Combine the two material images (both 2D images) as one vertical vector
+% by vectorizing and stacking the two images on top of each other
 x  =[target1(:);target2(:)];
 
 %% Start reconstruction
@@ -87,7 +88,7 @@ c12     = 8.561; % Iodine 30kV
 c21     = 0.456; % PVC    50kV  (High energy)
 c22     = 12.32; % Iodine 50kV
 
-%Sinogram
+% The two sinograms stacked on top of each other in one vertical vector
 mncn  = A2x2mult_matrixfree(c11,c12,c21,c22,x,ang,N);
 
 % Incomprehensible correction factor. It is related to the way Matlab
@@ -95,10 +96,9 @@ mncn  = A2x2mult_matrixfree(c11,c12,c21,c22,x,ang,N);
 % tested to work to reasonable accuracy. 
 corxn = 40.7467*N/64; 
 
-% Optimization routine
+% Optimization routine following Barzilai-Borwein
 obj    = zeros(MAXITER+1,1);     % We will monitor the value of the objective function
 fold   = zeros(size(x));    % Initial guess
-%fold = x;
 gold   = XR_aTV_fgrad_modified(fold,mncn,ang,corxn,alpha,beta,c11,c12,c21,c22,N);
 obj(1) = XR_aTV_feval_modified(fold,mncn,ang,alpha,beta,N,c11,c12,c21,c22); 
 
