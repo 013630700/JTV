@@ -33,12 +33,12 @@ N = 128;
 noiselevel = 0.01;
 
 % Texture phantom 2
-target1 = imread('phantom_maya1.bmp');
-target2 = imread('phantom_maya2.bmp');
+% target1 = imread('phantom_maya1.bmp');
+% target2 = imread('phantom_maya2.bmp');
 
 % Texture phantom 1
-% target1 = imread('phantom_carpet1.bmp');
-% target2 = imread('phantom_carpet2.bmp');
+target1 = imread('phantom_carpet1.bmp');
+target2 = imread('phantom_carpet2.bmp');
 
 % HY phantom
 % target1 = imread('phantom_hy1.bmp');
@@ -168,7 +168,7 @@ recn2=reshape(recn((end/2+1):end,:),N,N);
 
 
 % Save result to file
-save XRsparse_aTV_JTV_maya recn1 recn2 alpha target1 target2 obj
+save XRsparse_aTV_JTV_carpet recn1 recn2 alpha target1 target2 obj
 %% Calculate the error
 % Target 1
 E1    = norm(target1(:)-recn1(:))/norm(target1(:)); % Square error
@@ -203,16 +203,16 @@ im3 = im3-MIN;
 im3 = im3/(MAX-MIN);
 im4 = im4-MIN;
 im4 = im4/(MAX-MIN);
-imwrite(uint8(255*im3),'JTV_reco1_tex.png')
-imwrite(uint8(255*im4),'JTV_reco2_tex.png')
+imwrite(uint8(255*im3),'JTV_reco_carpet1.png')
+imwrite(uint8(255*im4),'JTV_reco_carpet2.png')
 
 %HaarPSI index:
-%HaarPSI index:Ei toimi ennenkuin arvot on normalisoitu?
+%HaarPSI index:Ei toimi ennenkuin arvot on [0,255]
 Haarpsi1=HaarPSI(255*im1,255*im3); 
 Haarpsi2=HaarPSI(255*im2,255*im4);
 Haarpsi  = (Haarpsi1+Haarpsi2)/2;
 
-save JTV_maya_for_segmentations im1 im2 im3 im4 N
+save JTV_carpet_for_segmentations im1 im2 im3 im4 N
 %% Take a look at the results
 figure(4);
 % Original phantom1

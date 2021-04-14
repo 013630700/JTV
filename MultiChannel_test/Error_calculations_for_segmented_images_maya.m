@@ -58,6 +58,7 @@ target2_thresholded = target2;
 target2_thresholded(target2>1) = 1;
 target2_thresholded(target2<1) = 0;
 nnz(target2_thresholded)
+nnz(target2)
 figure()
 imshow([target2_thresholded,im4_thresholded],[])
 title('thresholded image im4 = recn2')
@@ -96,3 +97,6 @@ colormap gray;
 axis square;
 axis off;
 title(['Pixel error ' num2str(round(error2,2))]);
+
+Image = getframe(gcf);
+imwrite(Image.cdata, 'segmentations_maya_JTV.jpg');
