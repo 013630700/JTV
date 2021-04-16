@@ -74,21 +74,21 @@ imagesc(target1_thresholded);
 colormap gray;
 axis square;
 axis off;
-title({'Maya1 phantom, JTV'});
+title({'Maya1 phantom, ground truth'});
 % Reconstruction of phantom1
 subplot(2,2,2)
 imagesc(im3_thresholded);
 colormap gray;
 axis square;
 axis off;
-title(['Pixel error ', num2str(round(error1,2))]);
+title(['JTV, pixel error ', num2str(round(error1,2))]);
 % Original target2
 subplot(2,2,3)
 imagesc(target2_thresholded);
 colormap gray;
 axis square;
 axis off;
-title({'Maya2 phantom, JTV '});
+title({'Maya2 phantom, ground truth '});
 % Reconstruction of target2
 subplot(2,2,4)
 imagesc(im4_thresholded);
@@ -96,7 +96,7 @@ imagesc(im4_thresholded);
 colormap gray;
 axis square;
 axis off;
-title(['Pixel error ' num2str(round(error2,2))]);
+title(['JTV, pixel error ' num2str(round(error2,2))]);
 
 Image = getframe(gcf);
 imwrite(Image.cdata, 'segmentations_maya_JTV.jpg');

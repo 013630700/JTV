@@ -8,7 +8,7 @@ thinline  = .5;
 thickline = 2;
 
 % Load reconstruction
-load XRsparse_aTV recn1 recn2 alpha target target2 obj
+load XRsparse_aTV_JTV_HY recn1 recn2 alpha target1 target2 obj
 
 % Compute relative errors
 err_squ1 = norm(target1(:)-recn1(:))/norm(target1(:));

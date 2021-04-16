@@ -18,11 +18,11 @@
 %Modified by Salla 2.7.2020
 clear all;
 % Regularization parameter
-alpha = 1000;
+alpha = 50;
 
 % Maximum number of iterations. You can modify this value and observe the
 % effects on the reconstruction.
-MAXITER = 20000;               
+MAXITER = 30000;               
 % Choose the angles for tomographic projections
 Nang       = 65; % odd number is preferred
 ang        = [0:(Nang-1)]*360/Nang;
@@ -32,25 +32,23 @@ beta    = .0001;
 N = 128;
 noiselevel = 0.01;
 
-% Texture phantom 2
-% target1 = imread('phantom_maya1.bmp');
-% target2 = imread('phantom_maya2.bmp');
-
-% Texture phantom 1
-target1 = imread('phantom_carpet1.bmp');
-target2 = imread('phantom_carpet2.bmp');
-
 % HY phantom
-% target1 = imread('phantom_hy1.bmp');
-% target2 = imread('phantom_hy2.bmp');
-
+target1 = imread('phantom_hy1.bmp');
+target2 = imread('phantom_hy2.bmp');
+% Texture phantom 1
+% target1 = imread('phantom_carpet1.bmp');
+% target2 = imread('phantom_carpet2.bmp');
 % Bone phantom
-% target1 = imread('phantom_bone1.bmp');
-% target2 = imread('phantom_bone2.bmp');
+% target1 = imread('phantom_boneA.bmp');
+% target2 = imread('phantom_boneB.bmp');
 
 % Select one of the channels
 target1 = target1(:,:,1);
 target2 = target2(:,:,1);
+
+% Make sure that there is only black or white pixels
+M1 = imbinarize(M1);
+M2 = imbinarize(M2);
 
 figure(89)
 imshow(target1,[]);
@@ -67,12 +65,28 @@ target2      = imresize(target2, [N N], 'nearest');
 % Avoid inverse crime by rotating the object (interpolation)
 target1_rot      = imrotate(target1,rotang,'bilinear','crop');
 target2_rot      = imrotate(target2,rotang,'bilinear','crop');
-
-%%
-% Vektorize
-% g1 = target1(:);
-% g2 = target2(:);
-
+% %Plot and save the targets with no white space! 
+% figure(55)
+% clf
+% subplot(1,2,1)
+% imagesc([target1]);
+% colormap gray
+% axis equal
+% axis off
+% %set(gca,'LooseInset',get(gca,'TightInset'));
+% %saveas(gcf,'target1.jpg')
+% subplot(1,2,2)
+% imagesc([target2]);
+% colormap gray
+% axis equal
+% axis off
+% %set(gca,'LooseInset',get(gca,'TightInset'));
+% fig = gcf;
+% fig.PaperPositionMode = 'auto'
+% fig_pos = fig.PaperPosition;
+% fig.PaperSize = [fig_pos(3) fig_pos(4)];
+% saveas(gcf,'targets.jpg')
+%% Vektorize
 % Combine the two material images (both 2D images) as one vertical vector
 % by vectorizing and stacking the two images on top of each other
 x  =[target1_rot(:);target2_rot(:)];
@@ -108,7 +122,7 @@ mncn  = m + noiselevel*max(abs(m(:)))*randn(size(m));
 % tested to work to reasonable accuracy. 
 corxn = 40.7467*N/64; 
 
-% Optimization routine following Barzilai-Borwein
+% Optimization routine
 obj    = zeros(MAXITER+1,1);     % We will monitor the value of the objective function
 fold   = zeros(size(x));    % Initial guess
 gold   = XR_aTV_fgrad_modified(fold,mncn,ang,corxn,alpha,beta,c11,c12,c21,c22,N);
@@ -121,7 +135,6 @@ obj(1) = XR_aTV_feval_modified(fold,mncn,ang,alpha,beta,N,c11,c12,c21,c22);
 t = .0001;
 
 % Compute new iterate point fnew and gradient gnew at fnew
-%gold = reshape(gold,2*N,N);
 fnew = max(fold - t*gold,0);
 gnew = XR_aTV_fgrad_modified(fnew,mncn,ang,corxn,alpha,beta,c11,c12,c21,c22,N);     
 
@@ -133,7 +146,6 @@ OFf        = XR_aTV_feval_modified(fnew,mncn,ang,alpha,beta,N,c11,c12,c21,c22);
 obj(its+1) = OFf;
 
 % Barzilai and Borwein iterative minimization routine 
-%figure(33)
 while (its  < MAXITER) 
     its = its + 1;   
     
@@ -149,26 +161,22 @@ while (its  < MAXITER)
     fold = fnew;
     gold = gnew;
     fnew = max(fnew - steplen*gnew,0);
-    gnew = XR_aTV_fgrad_modified(fnew,mncn,ang,corxn,alpha,beta,c11,c12,c21,c22,N);    
+    gnew = XR_aTV_fgrad_modified(fnew,mncn,ang,corxn,alpha,beta,c11,c12,c21,c22,N);
     OFf  = XR_aTV_feval_modified(fnew,mncn,ang,alpha,beta,N,c11,c12,c21,c22); 
     obj(its+1) = OFf;
     format short e
-    %imshow(fnew,[])
     % Monitor the run
     if mod(its,100)==0
         disp(['Iteration ', num2str(its),', objective function value ',num2str(obj(its),'%.8e')])
     end
 end   % Iteration while-loop
-%%
 recn = fnew;
 % Here we need to separate the different images by naming them as follows:
-% Erotellaan vektorista x kaksi osaa: g1 ja g2.
-recn1=reshape(recn(1:(end/2),:),N,N);
-recn2=reshape(recn((end/2+1):end,:),N,N);
-
+recn1=reshape(recn(1:(end/2)),N,N);
+recn2=reshape(recn(end/2+1:end),N,N);
 
 % Save result to file
-save XRsparse_aTV_JTV_carpet recn1 recn2 alpha target1 target2 obj
+save XRsparse_aTV_JTV_HY recn1 recn2 alpha target1 target2 obj
 %% Calculate the error
 % Target 1
 E1    = norm(target1(:)-recn1(:))/norm(target1(:)); % Square error
@@ -182,8 +190,8 @@ RMSE2      = sqrt(mean((target2(:) - recn2(:)).^2));  % Root Mean Squared Error
 E_mean       = sqrt(E1*E2);
 SSIM        = (SSIM1+SSIM2)/2;
 RMSE        = (RMSE1 + RMSE2)/2;
-% Show pictures of the results
-XRsparseD_aTV_plot_modified_texture
+%% Show pictures of the results
+XRsparseD_aTV_plot_modified
 
 %% Save image
 % Samu's version for saving:
@@ -203,16 +211,17 @@ im3 = im3-MIN;
 im3 = im3/(MAX-MIN);
 im4 = im4-MIN;
 im4 = im4/(MAX-MIN);
-imwrite(uint8(255*im3),'JTV_reco1_tex.png')
-imwrite(uint8(255*im4),'JTV_reco2_tex.png')
+imwrite(uint8(255*im3),'TV_reco_HY1.png')
+imwrite(uint8(255*im4),'TV_reco2_HY.png')
 
-%HaarPSI index:
-%HaarPSI index:Ei toimi ennenkuin arvot on normalisoitu?
-Haarpsi1=HaarPSI(255*im1,255*im3); 
-Haarpsi2=HaarPSI(255*im2,255*im4);
+%Calculate HaarPSI index. The values must be between [0,255]:
+Haarpsi1 = HaarPSI(255*im1,255*im3); 
+Haarpsi2 = HaarPSI(255*im2,255*im4);
 Haarpsi  = (Haarpsi1+Haarpsi2)/2;
 
-save JTV_carpet_for_segmentations im1 im2 im3 im4 N
+save JTV_HY_for_segmentations im1 im2 im3 im4 N
+
+
 %% Take a look at the results
 figure(4);
 % Original phantom1
@@ -252,10 +261,4 @@ fprintf('E1 %.2f     RMSE1 %.2f      SSIM1 %.2f     haarPSI1 %.2f  alpha %.2f \n
 fprintf('E2 %.2f     RMSE2 %.2f      SSIM2 %.2f     haarPSI2 %.2f  alpha %.2f \n', E2,RMSE2,SSIM2,Haarpsi2,alpha)
 fprintf('\n');
 fprintf('Mean error calculations for JTV approach: \n');
-fprintf('E_mean %.2f     RMSE %.2f      SSIM %.2f     haarPSI %.2f  alpha %.2f \n', E_mean,RMSE,SSIM,Haarpsi,alpha)% % Save to disk
-% originalImage = recn1;
-% outputBaseFileName = 'TV_Reco1.PNG';
-% imwrite(originalImage, outputBaseFileName);
-% originalImage = recn2;
-% outputBaseFileName = 'TV_Reco2.PNG';
-% imwrite(originalImage, outputBaseFileName);
+fprintf('E_mean %.2f     RMSE %.2f      SSIM %.2f     haarPSI %.2f  alpha %.2f \n', E_mean,RMSE,SSIM,Haarpsi,alpha)
