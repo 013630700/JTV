@@ -15,9 +15,11 @@
 
 function grad = XR_aTV_grad_mc(x,beta,N)
 
-% Erotellaan vektorista x kaksi osaa: g1 ja g2.
-g1=reshape(x(1:(end/2),:),N,N);
-g2=reshape(x((end/2+1):end,:),N,N);
+% We pick out the two material images from the vertical input vector and
+% reshape them into 2D images
+x = x(:); % Force x to be vertical vector
+g1 = reshape(x(1:(end/2)),N,N);
+g2 = reshape(x((end/2+1):end),N,N);
 
 % Lasketaan gradientti g1:lle kutsumalla funktioita XR_aTV_grad:
 grad_g1 = XR_aTV_grad(g1,beta);

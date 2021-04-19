@@ -26,14 +26,13 @@ function grad = XR_misfit_grad_modified(x,m,ang,corxn,c11,c12,c21,c22,N)
 % This function calculates operation with radon function, which corresponds 
 % multiplication A*g for system with two images and two materials.
 
-% This function calculates multiplication A*g for system with two images
-% and two materials, without constructing the matrix A.
-% Erotellaan vektorista x kaksi osaa: g1 ja g2.
-g1=reshape(x(1:(end/2),:),N,N);
-g2=reshape(x((end/2+1):end,:),N,N);
+% We pick out the two material images from the vertical input vector and
+% reshape them into 2D images
+x = x(:); % Force x to be vertical vector
+g1 = reshape(x(1:(end/2)),N,N);
+g2 = reshape(x((end/2+1):end),N,N);
 
-% Perform the needed matrix multiplications. Now a matrix multiplication
-% has been switched to radon
+% Compute the sinograms for the two images
 ag1 = radon(g1,ang);
 ag2 = radon(g2,ang);
 
@@ -43,12 +42,9 @@ res2 = c12*ag2;
 res3 = c21*ag1;
 res4 = c22*ag2;
 
-% Combine results into the result
-% Ax = [res1 + res2; res3 + res4];
-% figure(80)
-% imshow(Ax,[])
-m1 = res1+res2;
-m2 = res3+res4;
+% Evaluate sinograms in two-dimensional format
+m1 = res1+res2; % Low-energy sinogram of the two-material target
+m2 = res3+res4; % High-energy sinogram of the two-material target
 
 % m1 = Ax(1:(end/2));
 % m1 = reshape(m1, [length(m)/(2*length(ang)) length(ang)]);
