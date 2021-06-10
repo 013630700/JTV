@@ -28,19 +28,22 @@ white_pixels2 = nnz(target2)/(N*N);
 % So in the first reco we want nnz(im3) to be 6717. We get this number of
 % white pixels with the following treshold 0.3354.
 % MAYA TRESHOLD: 0.3354
-im3_thresholded = im3;
-im3_thresholded(im3>0.3354) = 1;
-im3_thresholded(im3<0.3354) = 0;
-nnz(im3_thresholded)
+im3_thresholded = recn1;
+im3_thresholded(im3>0.35) = 1;
+im3_thresholded(im3<0.35) = 0;
+
 
 % We want to treshold the target1 also to be zero or one.
 target1_thresholded = target1;
 target1_thresholded(target1>1) = 1;
 target1_thresholded(target1<1) = 0;
+disp('recn nnz')
+nnz(im3_thresholded)
+disp('target1 nnz')
 nnz(target1_thresholded)
-figure()
-imshow([target1_thresholded,im3_thresholded],[])
-title('thresholded image im3 = recn1')
+% figure()
+% imshow([target1_thresholded,im3_thresholded],[])
+% title('thresholded image im3 = recn1')
 
 % Calculate the error for reconstruction 1
 error1=(nnz(target1_thresholded-im3_thresholded))/(N*N);
@@ -48,9 +51,9 @@ error1=(nnz(target1_thresholded-im3_thresholded))/(N*N);
 %% Calculate the error with the second reconstruction
 % The amount of white pixels is 4028.
 % MAYA TRESHOLD: 0.302
-im4_thresholded = im4;
-im4_thresholded(im4>0.302) = 1;
-im4_thresholded(im4<0.302) = 0;
+im4_thresholded = recn2;
+im4_thresholded(im4>0.25) = 1;
+im4_thresholded(im4<0.25) = 0;
 nnz(im4_thresholded)
 % display result
 % We want to treshold the target1 also to be zero or one.
@@ -58,7 +61,6 @@ target2_thresholded = target2;
 target2_thresholded(target2>1) = 1;
 target2_thresholded(target2<1) = 0;
 nnz(target2_thresholded)
-nnz(target2)
 figure()
 imshow([target2_thresholded,im4_thresholded],[])
 title('thresholded image im4 = recn2')
@@ -74,21 +76,21 @@ imagesc(target1_thresholded);
 colormap gray;
 axis square;
 axis off;
-title({'Maya1 phantom, ground truth'});
+title({'Maya1 phantom, Ground truth'});
 % Reconstruction of phantom1
 subplot(2,2,2)
 imagesc(im3_thresholded);
 colormap gray;
 axis square;
 axis off;
-title(['JTV, pixel error ', num2str(round(error1,2))]);
+title(['JTV, Pixel error ', num2str(round(error1,2))]);
 % Original target2
 subplot(2,2,3)
 imagesc(target2_thresholded);
 colormap gray;
 axis square;
 axis off;
-title({'Maya2 phantom, ground truth '});
+title({'Maya2 phantom, Ground truth '});
 % Reconstruction of target2
 subplot(2,2,4)
 imagesc(im4_thresholded);
@@ -96,7 +98,7 @@ imagesc(im4_thresholded);
 colormap gray;
 axis square;
 axis off;
-title(['JTV, pixel error ' num2str(round(error2,2))]);
+title(['JTV, Pixel error ' num2str(round(error2,2))]);
 
 Image = getframe(gcf);
 imwrite(Image.cdata, 'segmentations_maya_JTV.jpg');
